@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.right {
+  width: calc(100% - 600px);
+  /* background-color: orange; */
+}
