@@ -9,9 +9,9 @@ const App = () => {
   let { allPrompts, allResponses } = useSelector((state) => state.ai);
   const dispatch = useDispatch();
 
-  console.log(allPrompts)
+  console.log(allPrompts);
 
-  console.log(allResponses)
+  console.log(allResponses);
 
   const handleResponse = (response, promptIndex) => {
     dispatch(setAllResponses({ response, promptIndex }));
@@ -23,7 +23,7 @@ const App = () => {
         {/* Left Section */}
         <div className="w-full lg:w-1/2 xl:w-2/5 flex flex-col">
           <ChatBox onResponse={handleResponse} />
-          
+
           <div className="mt-4 w-full max-w-full flex flex-col items-start gap-3">
             {allPrompts?.map((prompt, index) => (
               <div
@@ -34,14 +34,16 @@ const App = () => {
 
                 {allResponses[index] && (
                   <div className="w-full max-w-full p-3 border-2 border-gray-700 rounded-sm bg-[#111827] mt-2">
-                    {Array.isArray(allResponses[index]) && allResponses[index]?.map((res, i) => (
-                      <h1 key={i} className="flex items-center gap-2 text-sm">
-                        <span className="text-green-600">
-                          <IoIosCheckmarkCircle />
-                        </span>
-                        Created: {res}
-                      </h1>
-                    ))}
+                    {allResponses[index]?.response &&
+                      Array.isArray(allResponses[index]?.response) &&
+                      allResponses[index]?.response?.map((res, i) => (
+                        <h1 key={i} className="flex items-center gap-2 text-sm">
+                          <span className="text-green-600">
+                            <IoIosCheckmarkCircle />
+                          </span>
+                          Created: {res}
+                        </h1>
+                      ))}
                   </div>
                 )}
               </div>
