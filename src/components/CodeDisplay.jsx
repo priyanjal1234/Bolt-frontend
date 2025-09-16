@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import hljs from "highlight.js";
-import "highlight.js/styles/atom-one-dark.css"; // Import your preferred Highlight.js theme
+import "highlight.js/styles/atom-one-dark.css";
 
 const CodeDisplay = () => {
   const { currentFileCode } = useSelector((state) => state.ai);
   const codeRef = useRef(null);
-
 
   useEffect(() => {
     if (codeRef.current) {
@@ -16,15 +15,16 @@ const CodeDisplay = () => {
   }, [currentFileCode]);
 
   return (
-    <div className="w-[75%] h-full text-white">
+    <div className="w-full h-full text-white">
       {currentFileCode && (
-        <pre className=" w-full h-fit overflow-auto p-4 rounded">
-          <code ref={codeRef} className="language-javascript">
-            {currentFileCode}
-          </code>
-        </pre>
+        <div className="w-full h-full bg-[#111827] rounded-lg p-4">
+          <pre className="w-full h-full overflow-auto">
+            <code ref={codeRef} className="language-javascript">
+              {currentFileCode}
+            </code>
+          </pre>
+        </div>
       )}
-      
     </div>
   );
 };

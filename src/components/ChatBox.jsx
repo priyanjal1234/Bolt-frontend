@@ -10,14 +10,13 @@ import {
 import { getWebContainer } from "../config/webContainer";
 import { VscOpenPreview } from "react-icons/vsc";
 
-const ChatBox = () => {
+const ChatBox = ({ onResponse }) => {
   const [prompt, setprompt] = useState("");
   let dispatch = useDispatch();
   const [mountFiles, setmountFiles] = useState({});
   const [webContainer, setwebContainer] = useState(null);
   const [iFrameUrl, setiFrameUrl] = useState("");
-
-  const [start, setstart] = useState(false)
+  const [start, setstart] = useState(false);
 
   const { currentFileCode } = useSelector((state) => state.ai);
 
@@ -43,11 +42,10 @@ const ChatBox = () => {
       );
 
       setmountFiles(res?.data?.fileTree);
-
       dispatch(setFileData(res?.data?.currentProject?.response));
-
-      dispatch(
-        setAllResponses(res?.data?.fileData?.map((item) => item.filename))
+      onResponse(
+        res?.data?.fileData?.map((item) => item.filename),
+        allPrompts.length
       );
       setprompt("");
     } catch (error) {
@@ -61,13 +59,12 @@ const ChatBox = () => {
       await webContainer?.mount(mountFiles);
       console.log("mounted");
       
-      let lsProcess = await webContainer?.spawn("ls")
-
+      let lsProcess = await webContainer?.spawn("ls");
       lsProcess.output.pipeTo(new WritableStream({
         write(chunk) {
-          console.log(chunk)
+          console.log(chunk);
         }
-      }))
+      }));
 
       let installProcess = await webContainer?.spawn("npm", ["install"]);
       installProcess.output.pipeTo(
@@ -78,10 +75,8 @@ const ChatBox = () => {
         })
       );
 
-      setstart(() => true)
-
+      setstart(() => true);
       let startProcess = await webContainer?.spawn("npm", ["start"]);
-
       startProcess.output.pipeTo(
         new WritableStream({
           write(chunk) {
@@ -101,34 +96,42 @@ const ChatBox = () => {
 
   return (
     <>
-      <div className="w-[600px] h-[60px] bg-[#111827] text-white flex items-center pl-4 border-2 rounded-lg bottom-3 absolute border-gray-700">
+      <div className="w-full max-w-full bg-[#111827] text-white flex items-center p-4 border-2 rounded-lg border-gray-700 mb-4">
         <form
           onSubmit={handleGetAIResponse}
-          className="w-full flex justify-around items-center"
+          className="w-full flex flex-col sm:flex-row gap-2 items-center"
         >
           <input
             type="text"
-            className="w-[80%] h-full bg-transparent outline-none text-white"
+            className="w-full sm:w-3/4 h-12 bg-transparent outline-none text-white px-2 border border-gray-600 rounded"
             placeholder="Write Prompt"
             name="prompt"
             value={prompt}
             onChange={(e) => setprompt(e.target.value)}
           />
-          <button type="submit" className="px-3 py-2 bg-blue-900 rounded-lg">
+          <button type="submit" className="w-full sm:w-auto px-4 py-2 bg-blue-900 rounded-lg">
             Send
           </button>
         </form>
       </div>
+      
       {currentFileCode && (
         <button
           onClick={handleRunCode}
-          className="px-3 py-2 bg-blue-600 rounded-lg absolute right-5 top-[400px]"
+          className="px-4 py-2 bg-blue-600 rounded-lg mb-4"
         >
           {start ? "Run" : "Start"}
         </button>
       )}
+      
       {iFrameUrl && webContainer && (
-        <iframe crossorigin="anonymous" className="text-white w-[500px] h-[300px] absolute bottom-20 left-[900px] bg-white" src={iFrameUrl}></iframe>
+        <div className="w-full max-w-full overflow-hidden">
+          <iframe
+            crossOrigin="anonymous"
+            className="w-full h-64 md:h-96 bg-white border rounded-lg"
+            src={iFrameUrl}
+          ></iframe>
+        </div>
       )}
     </>
   );
