@@ -6,6 +6,8 @@ const RightSidebar = () => {
   const { allResponses, fileData } = useSelector((state) => state.ai);
   const dispatch = useDispatch();
 
+  console.log(fileData)
+
   const handleCurrentFileCode = (data) => {
     const selectedFile = fileData.find((file) => file.filename === data);
     if (selectedFile) {
