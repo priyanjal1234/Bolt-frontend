@@ -19,7 +19,7 @@ const RightSidebar = () => {
     <div className="w-full rounded-lg p-4 bg-[#111827]">
       <h1 className="text-lg font-semibold mb-4">File Explorer</h1>
       <div className="flex flex-col gap-2">
-        {allResponses[0]?.map((res, i) => (
+        {Array.isArray(allResponses[0]) && allResponses[0]?.map((res, i) => (
           <button
             onClick={() => handleCurrentFileCode(res)}
             key={i}
