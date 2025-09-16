@@ -18,7 +18,7 @@ const ChatBox = ({ onResponse }) => {
   const [iFrameUrl, setiFrameUrl] = useState("");
   const [start, setstart] = useState(false);
 
-  const { currentFileCode } = useSelector((state) => state.ai);
+  const { currentFileCode,allPrompts } = useSelector((state) => state.ai);
 
   useEffect(() => {
     if (!webContainer) {
