@@ -15,7 +15,7 @@ const RightSidebar = () => {
     }
   };
 
-  console.log(allResponses[0])
+  console.log(allResponses[0].response)
 
   return (
     <div className="w-full rounded-lg p-4 bg-[#111827]">
