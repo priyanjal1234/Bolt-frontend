@@ -11,6 +11,8 @@ const App = () => {
 
   console.log(allPrompts)
 
+  console.log(allResponses)
+
   const handleResponse = (response, promptIndex) => {
     dispatch(setAllResponses({ response, promptIndex }));
   };
