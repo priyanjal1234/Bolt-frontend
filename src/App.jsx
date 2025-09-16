@@ -9,6 +9,8 @@ const App = () => {
   let { allPrompts, allResponses } = useSelector((state) => state.ai);
   const dispatch = useDispatch();
 
+  console.log(allPrompts)
+
   const handleResponse = (response, promptIndex) => {
     dispatch(setAllResponses({ response, promptIndex }));
   };
