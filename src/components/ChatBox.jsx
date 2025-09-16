@@ -18,7 +18,7 @@ const ChatBox = ({ onResponse }) => {
   const [iFrameUrl, setiFrameUrl] = useState("");
   const [start, setstart] = useState(false);
 
-  const { currentFileCode,allPrompts } = useSelector((state) => state.ai);
+  const { currentFileCode, allPrompts } = useSelector((state) => state.ai);
 
   useEffect(() => {
     if (!webContainer) {
@@ -43,8 +43,12 @@ const ChatBox = ({ onResponse }) => {
 
       setmountFiles(res?.data?.fileTree);
       dispatch(setFileData(res?.data?.currentProject?.response));
+      const fileNames = Array.isArray(res?.data?.fileData)
+        ? res.data.fileData.map((item) => item.filename)
+        : [];
+
       onResponse(
-        res?.data?.fileData?.map((item) => item.filename),
+        fileNames,
         allPrompts.length
       );
       setprompt("");
@@ -58,13 +62,15 @@ const ChatBox = ({ onResponse }) => {
       console.log("Mounting Files");
       await webContainer?.mount(mountFiles);
       console.log("mounted");
-      
+
       let lsProcess = await webContainer?.spawn("ls");
-      lsProcess.output.pipeTo(new WritableStream({
-        write(chunk) {
-          console.log(chunk);
-        }
-      }));
+      lsProcess.output.pipeTo(
+        new WritableStream({
+          write(chunk) {
+            console.log(chunk);
+          },
+        })
+      );
 
       let installProcess = await webContainer?.spawn("npm", ["install"]);
       installProcess.output.pipeTo(
@@ -86,7 +92,7 @@ const ChatBox = ({ onResponse }) => {
       );
 
       webContainer?.on("server-ready", function (port, url) {
-        console.log(port, url); 
+        console.log(port, url);
         setiFrameUrl(url);
       });
     } catch (error) {
@@ -109,12 +115,15 @@ const ChatBox = ({ onResponse }) => {
             value={prompt}
             onChange={(e) => setprompt(e.target.value)}
           />
-          <button type="submit" className="w-full sm:w-auto px-4 py-2 bg-blue-900 rounded-lg">
+          <button
+            type="submit"
+            className="w-full sm:w-auto px-4 py-2 bg-blue-900 rounded-lg"
+          >
             Send
           </button>
         </form>
       </div>
-      
+
       {currentFileCode && (
         <button
           onClick={handleRunCode}
@@ -123,7 +132,7 @@ const ChatBox = ({ onResponse }) => {
           {start ? "Run" : "Start"}
         </button>
       )}
-      
+
       {iFrameUrl && webContainer && (
         <div className="w-full max-w-full overflow-hidden">
           <iframe

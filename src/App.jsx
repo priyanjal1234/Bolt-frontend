@@ -32,7 +32,7 @@ const App = () => {
 
                 {allResponses[index] && (
                   <div className="w-full max-w-full p-3 border-2 border-gray-700 rounded-sm bg-[#111827] mt-2">
-                    {allResponses[index]?.map((res, i) => (
+                    {Array.isArray(allResponses[index]) && allResponses[index]?.map((res, i) => (
                       <h1 key={i} className="flex items-center gap-2 text-sm">
                         <span className="text-green-600">
                           <IoIosCheckmarkCircle />
